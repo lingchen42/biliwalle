@@ -1,4 +1,5 @@
 import yaml
+import shutil
 import argparse
 import numpy as np
 from glob import glob
@@ -13,6 +14,7 @@ def load_config(configfn):
 
     data = config.get("data", {}) 
     audiodir = data.get("audiodir", "")
+    outdir = data.get("outdir", "")
     protocolcsv = data.get("protocolcsv", "")
     assert os.path.exists(audiodir) is True, \
         "audiodir %s doesn't exist, please check"%audiodir
@@ -21,7 +23,9 @@ def load_config(configfn):
     protocoldf = pd.read_csv(protocolcsv)
     audiofiles = os.listdir(audiodir)
     audio_setting = config.get("audio_setting", {})
-    return protocoldf, audiofiles, audiodir, audio_setting
+    saveconfig = config.get("other", {}).get("saveconfig", None)
+    return protocoldf, audiofiles, audiodir, outdir, \
+           audio_setting, saveconfig
 
 
 def empty_audio_clip(duration, fps):
@@ -106,12 +110,13 @@ def main():
     parser = argparse.ArgumentParser(description='Concatenate audio files')
     parser.add_argument('-c', '--config', required=True,
            help="configuration file for concatenating audio files")
-    parser.add_argument('-o', '--outdir', required=True,
-           help="output directory")
     args = parser.parse_args()
 
-    protocoldf, audiofiles, audiodir, audio_setting = load_config(args.config)
-    combine_with_protocol_table(protocoldf, args.outdir, audiodir, audio_setting)                            
+    protocoldf, audiofiles, audiodir, outdir,\
+         audio_setting, saveconfig = load_config(args.config)
+    combine_with_protocol_table(protocoldf, outdir, audiodir, audio_setting)                            
+    if saveconfig:
+        shutil.copy(args.config, outdir)
 
     
 if __name__ == "__main__":
