@@ -1,3 +1,4 @@
+import os
 import yaml
 import shutil
 import argparse
@@ -21,10 +22,9 @@ def load_config(configfn):
     assert os.path.exists(protocolcsv) is True, \
         "protocolcsv %s doesn't exist, please check"%protocolcsv
     protocoldf = pd.read_csv(protocolcsv)
-    audiofiles = os.listdir(audiodir)
     audio_setting = config.get("audio_setting", {})
     saveconfig = config.get("other", {}).get("saveconfig", None)
-    return protocoldf, audiofiles, audiodir, outdir, \
+    return protocoldf, audiodir, outdir, \
            audio_setting, saveconfig
 
 
@@ -114,7 +114,7 @@ def main():
            help="configuration file for concatenating audio files")
     args = parser.parse_args()
 
-    protocoldf, audiofiles, audiodir, outdir,\
+    protocoldf, audiodir, outdir,\
          audio_setting, saveconfig = load_config(args.config)
     combine_with_protocol_table(protocoldf, outdir, audiodir, audio_setting)                            
     if saveconfig:
