@@ -2,6 +2,12 @@ Welcome to biliwalle!
 
 ---
 
+## biliwalle tools
+The biliwalle suite contains the following tools:
+
+1. [waveweaver](https://github.com/lingchen42/biliwalle/wiki/2.-waveweaver) <br>
+This can concatenate multiple audio files and add padding at the start/interval/end based on a given protocol.
+
 ## Installation
 ```
 # clone the repo for first-time user
