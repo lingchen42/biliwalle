@@ -1,0 +1,10 @@
+data:
+  audiodir: /Users/chenling/Dropbox/pumpki/BILI WALLE/Eng_Training_70/
+  protocolcsv: /Users/chenling/Dropbox/pumpki/BILI WALLE/Wav weaver protocol.csv
+
+audio_setting:
+  start_padding: 1
+  interval_padding: 1
+  end_padding: 1
+  additional_padding_location: start
+  additional_padding_value_column: Pad_silence
