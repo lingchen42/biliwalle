@@ -6,7 +6,7 @@ Welcome to biliwalle!
 ```
 # clone the repo for first-time user
 git clone https://github.com/lingchen42/biliwalle.git
-# or pull the newest changes
+# or pull the newest changes for non-first-time user
 git pull https://github.com/lingchen42/biliwalle.git
 
 # change to the directory
