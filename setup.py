@@ -18,11 +18,12 @@ setup(
     zip_safe=False,
     include_package_data=True,
     install_requires=['moviepy == 1.0.3',
-                       'pandas > 1.2.1',
+                       'pandas > 0.11',
                        'PyYAML == 5.4.1'],
     entry_points={
         'console_scripts': [
             'waveweaver=biliwalle.waveweaver:main',
+            'clipcreator=biliwalle.clipcreator:main',
         ],
     },
     classifiers=[ 
