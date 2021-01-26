@@ -1,0 +1,29 @@
+data:
+  #protocolcsv: /Users/chenling/Dropbox/pumpki/BILI WALLE/Clip Creator/CreatingTestingVideo-Eng.csv
+  protocolcsv: /Users/chenling/Dropbox/pumpki/BILI WALLE/Clip Creator/CreatingTrainingVideo-Eng.csv
+  audiodir: /Users/chenling/Dropbox/pumpki/BILI WALLE/Clip Creator/Input Audio/ 
+  videodir: /Users/chenling/Dropbox/pumpki/BILI WALLE/Clip Creator/Input Video/ 
+  outdir: /Users/chenling/Desktop/test/
+
+video_setting:
+  out_width: 1920
+  out_height: 1080
+  objects: 
+    Left:  # the name of the column containing the object as key
+      resize_to_width: 640  # original is 1920, 1080; scale factor 3
+      resize_to_height: 360
+      position_x: 380  # center_x, integer number
+      position_y: 540
+    Right:
+      resize_to_width: 620
+      resize_to_height: 360
+      position_x: 1540
+      position_y: 540
+    Object:
+      resize_to_width: 620
+      resize_to_height: 360
+      position_x: 910
+      position_y: 540
+
+other:
+  saveconfig: True
