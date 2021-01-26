@@ -31,7 +31,7 @@ def empty_audio_clip(duration, fps):
     '''
         duration is in ms
     '''
-    empty_clip = np.zeros((int(fps*duration*1000), 2))
+    empty_clip = np.zeros((int(fps*duration/1000), 2))
     empty_clip = AudioArrayClip(empty_clip, fps=fps) 
     empty_clip.end = empty_clip.start + empty_clip.duration
     return empty_clip
