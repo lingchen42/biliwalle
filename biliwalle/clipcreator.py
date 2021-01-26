@@ -32,8 +32,10 @@ def load_config(configfn):
            video_setting, saveconfig
 
 
-def compose(videos, audio, output_size):
-    v = CompositeVideoClip(videos, output_size)
+def compose(videos, audio, output_size,
+            bg_color=(255, 255, 255)):
+    v = CompositeVideoClip(videos, output_size,
+                          bg_color=bg_color)
     v = v.subclip(0, audio.duration).set_audio(audio)
     return v
 
