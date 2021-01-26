@@ -1,9 +1,8 @@
 data:
-  #protocolcsv: /Users/chenling/Dropbox/pumpki/BILI WALLE/Clip Creator/CreatingTestingVideo-Eng.csv
-  protocolcsv: /Users/chenling/Dropbox/pumpki/BILI WALLE/Clip Creator/CreatingTrainingVideo-Eng.csv
-  audiodir: /Users/chenling/Dropbox/pumpki/BILI WALLE/Clip Creator/Input Audio/ 
-  videodir: /Users/chenling/Dropbox/pumpki/BILI WALLE/Clip Creator/Input Video/ 
-  outdir: /Users/chenling/Desktop/test/
+  protocolcsv: your_protocolcsv
+  audiodir: your_audiodir
+  videodir: your_videodir
+  outdir: your_outdir
 
 video_setting:
   out_width: 1920
