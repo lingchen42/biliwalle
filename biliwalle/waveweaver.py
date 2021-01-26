@@ -3,7 +3,6 @@ import yaml
 import shutil
 import argparse
 import numpy as np
-from glob import glob
 import pandas as pd
 from moviepy.editor import *
 from moviepy.audio.AudioClip import AudioArrayClip
@@ -29,7 +28,10 @@ def load_config(configfn):
 
 
 def empty_audio_clip(duration, fps):
-    empty_clip = np.zeros((fps*duration, 2))
+    '''
+        duration is in ms
+    '''
+    empty_clip = np.zeros((int(fps*duration*1000), 2))
     empty_clip = AudioArrayClip(empty_clip, fps=fps) 
     empty_clip.end = empty_clip.start + empty_clip.duration
     return empty_clip
@@ -87,7 +89,7 @@ def concatenate_audiofns(audiofns, audiodir,
     return audio
 
 
-def combine_with_protocol_table(protocoldf, outdir, audiodir, audio_setting,
+def weave_audio_with_protocol(protocoldf, outdir, audiodir, audio_setting,
                             fps=44100):
     if not os.path.exists(outdir):
         os.makedirs(outdir)
@@ -116,7 +118,7 @@ def main():
 
     protocoldf, audiodir, outdir,\
          audio_setting, saveconfig = load_config(args.config)
-    combine_with_protocol_table(protocoldf, outdir, audiodir, audio_setting)                            
+    weave_audio_with_protocol(protocoldf, outdir, audiodir, audio_setting)                            
     if saveconfig:
         shutil.copy(args.config, outdir)
 
