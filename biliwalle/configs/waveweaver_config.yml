@@ -1,7 +1,7 @@
 data:
-  audiodir: /Users/chenling/Dropbox/pumpki/BILI WALLE/CreatingAudio/Training_70db/
-  protocolcsv: /Users/chenling/Dropbox/pumpki/BILI WALLE/CreatingAudio/Wav weaver training protocol.csv
-  outdir: /Users/chenling/Desktop/waveweaver_test/
+  audiodir: your_audiodir
+  protocolcsv: your_protocolcsv
+  outdir: your_outdir
 
 audio_setting:
   start_padding: 1
