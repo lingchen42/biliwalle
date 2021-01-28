@@ -1,0 +1,14 @@
+data:
+  protocolcsv: your_protocolcsv
+  videodir: your_videodir
+  outdir: your_outdir
+
+video_setting:
+  out_width: 1920
+  out_height: 1080
+  between_trial: 
+    duration: 1  # in seconds
+    bg_color: black  # black or white
+
+other:
+  saveconfig: True

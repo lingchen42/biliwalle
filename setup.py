@@ -24,6 +24,7 @@ setup(
         'console_scripts': [
             'waveweaver=biliwalle.waveweaver:main',
             'clipcreator=biliwalle.clipcreator:main',
+            'biliwalle=biliwalle.biliwalle:main',
         ],
     },
     classifiers=[ 
