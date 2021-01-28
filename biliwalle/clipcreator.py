@@ -128,12 +128,6 @@ def make_clip_with_protocol(protocoldf, outdir,
                            audio=audio,
                            output_size=(w, h))
 
-        # close the opened videos
-        for v in videos:
-            v.close()
-        outvideo.close()
-        audio.close()
-
         if verbose:
             print("\nWriting to %s"%outname)
             logger = "bar"
@@ -145,6 +139,13 @@ def make_clip_with_protocol(protocoldf, outdir,
                                  remove_temp=True,
                                  fps=fps,
                                  logger=logger)
+        
+        # close the opened videos
+        for v in videos:
+            v.close()
+        outvideo.close()
+        audio.close()
+
 
 
 def main():
