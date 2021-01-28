@@ -39,7 +39,7 @@ def blank_clip(duration, bg_color, size):
     imgpath = os.path.join(dirpath, "blank.png")
     img.save(imgpath)
     clip = ImageClip(imgpath).\
-            set_duration(duration)
+            with_duration(duration)
 
     # remove temp dir
     shutil.rmtree(dirpath)
