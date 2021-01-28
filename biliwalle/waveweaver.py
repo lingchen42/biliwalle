@@ -23,8 +23,9 @@ def load_config(configfn):
     protocoldf = pd.read_csv(protocolcsv)
     audio_setting = config.get("audio_setting", {})
     saveconfig = config.get("other", {}).get("saveconfig", None)
+    reprocess = config.get("other", {}).get("reprocess", True)
     return protocoldf, audiodir, outdir, \
-           audio_setting, saveconfig
+           audio_setting, saveconfig, reprocess
 
 
 def empty_audio_clip(duration, fps):
@@ -97,7 +98,7 @@ def concatenate_audiofns(audiofns, audiodir,
 
 
 def weave_audio_with_protocol(protocoldf, outdir, audiodir, audio_setting,
-                            fps=44100):
+                              fps=44100, verbose=1, reprocess=True):
     if not os.path.exists(outdir):
         os.makedirs(outdir)
 
@@ -110,6 +111,10 @@ def weave_audio_with_protocol(protocoldf, outdir, audiodir, audio_setting,
             = grp[audio_setting["additional_padding_value_column"]]\
                 .values[0]
         try:
+            if os.path.exists(outfn) and (not reprocess):
+                if verbose:
+                    print("\nSKIP found existing %s"%outfn)
+                continue
             concatenate_audiofns(audiofns, audiodir, fps=fps,
                         savetofn=outfn, **audio_setting)
         except OSError as e:
@@ -124,8 +129,10 @@ def main():
     args = parser.parse_args()
 
     protocoldf, audiodir, outdir,\
-         audio_setting, saveconfig = load_config(args.config)
-    weave_audio_with_protocol(protocoldf, outdir, audiodir, audio_setting)                            
+         audio_setting, saveconfig, reprocess\
+              = load_config(args.config)
+    weave_audio_with_protocol(protocoldf, outdir, audiodir, audio_setting,
+                              reprocess=reprocess)
     if saveconfig:
         shutil.copy(args.config, outdir)
 
