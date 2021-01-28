@@ -36,7 +36,7 @@ def compose(videos, audio, output_size,
             bg_color=(255, 255, 255)):
     v = CompositeVideoClip(videos, output_size,
                           bg_color=bg_color)
-    v = v.subclip(0, audio.duration).set_audio(audio)
+    v = v.with_audio(audio).subclip(0, audio.duration)
     return v
 
 
@@ -53,7 +53,7 @@ def process_video(videofn, resize_to_width, resize_to_height,
     video = VideoFileClip(videofn)
     video = video.resize(width=resize_to_width, 
                         height=resize_to_height).\
-                  set_pos((x, y))
+                  with_position((x, y))
     return video
 
 
@@ -66,7 +66,7 @@ def process_audio(audiofn, audiodir, fps=44100):
         audio = AudioFileClip(n_audiofn[0])
     else:
         audiofn = audiofn.lower()
-        silence_duraion = int(re.findall("silence_([0-9])*s",
+        silence_duraion = int(re.findall("([0-9]+)",
                                          audiofn)[0])  # in seconds
         audio = empty_audio_clip(silence_duraion*1000, 
                                       fps=fps)
@@ -125,9 +125,10 @@ def make_movie_with_protocol(protocoldf, outdir,
             logger = None
         
         outvideo.write_videofile(outname, codec=codec,
-                                 audio_codec='aac',
+                                 audio_codec='libmp3lame',
+                                 audio_bitrate='320k',
                                  remove_temp=True,
-                                 fps=fps, verbose=verbose,
+                                 fps=fps,
                                  logger=logger)
 
 
