@@ -12,3 +12,4 @@ audio_setting:
 
 other:
   saveconfig: True  # will save input configuration file in the outdir
+  reprocess: False
