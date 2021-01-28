@@ -28,8 +28,9 @@ def load_config(configfn):
     protocoldf = pd.read_csv(protocolcsv)
     video_setting = config.get("video_setting", {})
     saveconfig = config.get("other", {}).get("saveconfig", None)
+    reprocess = config.get("other", {}).get("reprocess", True)
     return protocoldf, audiodir, videodir, outdir, \
-           video_setting, saveconfig
+           video_setting, saveconfig, reprocess
 
 
 def compose(videos, audio, output_size,
@@ -80,7 +81,8 @@ def make_clip_with_protocol(protocoldf, outdir,
                              train_identifier="Training_trial_ID",
                              fps=30,
                              codec='libx264',
-                             verbose=1):
+                             verbose=1,
+                             reprocess=True):
     '''
         Make movie based on the protocol table
     '''
@@ -90,6 +92,13 @@ def make_clip_with_protocol(protocoldf, outdir,
     if not os.path.exists(outdir): os.makedirs(outdir)
 
     for _, row in protocoldf.iterrows():
+        outname = os.path.join(outdir, row["Output_file"])
+
+        if os.path.exists(outname) and (not reprocess):
+            if verbose:
+                print("\nSKIP found existing %s"%outname)
+            continue
+            
         if test_identifier in protocoldf.columns:
             # for testing movie making with left/right objects
             left_video_fn = glob(videodir+"/%s_*"%row["Left"])[0]
@@ -125,7 +134,6 @@ def make_clip_with_protocol(protocoldf, outdir,
         outvideo.close()
         audio.close()
 
-        outname = os.path.join(outdir, row["Output_file"])
         if verbose:
             print("\nWriting to %s"%outname)
             logger = "bar"
@@ -148,10 +156,12 @@ def main():
     args = parser.parse_args()
 
     protocoldf, audiodir, videodir, outdir,\
-         video_setting, saveconfig = load_config(args.config)
+         video_setting, saveconfig, reprocess\
+             = load_config(args.config)
     make_clip_with_protocol(protocoldf, outdir, 
                              audiodir, videodir, video_setting,
-                             verbose=bool(args.verbose))
+                             verbose=bool(args.verbose),
+                             reprocess=reprocess)
     if saveconfig:
         shutil.copy(args.config, outdir)
 

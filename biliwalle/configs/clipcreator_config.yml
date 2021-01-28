@@ -26,3 +26,4 @@ video_setting:
 
 other:
   saveconfig: True
+  reprocess: True
