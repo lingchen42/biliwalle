@@ -86,6 +86,13 @@ def concatenate_audiofns(audiofns, audiodir,
     if savetofn:
         audio.write_audiofile(savetofn, fps=fps)
 
+    try:
+        audio.close()
+        for a in audio_files:
+            a.close()
+    except Exception as e:
+        print(e)
+
     return audio
 
 

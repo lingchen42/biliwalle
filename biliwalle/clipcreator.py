@@ -36,7 +36,8 @@ def compose(videos, audio, output_size,
             bg_color=(255, 255, 255)):
     v = CompositeVideoClip(videos, output_size,
                           bg_color=bg_color)
-    v = v.with_audio(audio).subclip(0, audio.duration)
+    if audio != None:
+        v = v.with_audio(audio).subclip(0, audio.duration)
     return v
 
 
@@ -73,7 +74,7 @@ def process_audio(audiofn, audiodir, fps=44100):
     return audio
 
 
-def make_movie_with_protocol(protocoldf, outdir, 
+def make_clip_with_protocol(protocoldf, outdir, 
                              audiodir, videodir, video_setting,
                              test_identifier="Test_trial_ID",
                              train_identifier="Training_trial_ID",
@@ -117,6 +118,13 @@ def make_movie_with_protocol(protocoldf, outdir,
         outvideo = compose(videos=videos,
                            audio=audio,
                            output_size=(w, h))
+
+        # close the opened videos
+        for v in videos:
+            v.close()
+        outvideo.close()
+        audio.close()
+
         outname = os.path.join(outdir, row["Output_file"])
         if verbose:
             print("\nWriting to %s"%outname)
@@ -132,7 +140,7 @@ def make_movie_with_protocol(protocoldf, outdir,
 
 
 def main():
-    parser = argparse.ArgumentParser(description='Concatenate audio files')
+    parser = argparse.ArgumentParser(description='Create stimuli video clips')
     parser.add_argument('-c', '--config', required=True,
            help="configuration file for concatenating audio files")
     parser.add_argument('-v', '--verbose', default=1, type=int,
@@ -141,7 +149,7 @@ def main():
 
     protocoldf, audiodir, videodir, outdir,\
          video_setting, saveconfig = load_config(args.config)
-    make_movie_with_protocol(protocoldf, outdir, 
+    make_clip_with_protocol(protocoldf, outdir, 
                              audiodir, videodir, video_setting,
                              verbose=bool(args.verbose))
     if saveconfig:
