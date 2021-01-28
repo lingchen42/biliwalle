@@ -13,9 +13,8 @@ Git - https://git-scm.com/
 
 ## Installation
 ```
-# install from source
 pip install git+https://github.com/lingchen42/biliwalle.git --upgrade
-#pip install git+https://github.com/lingchen42/biliwalle.git@{tagname} --upgrade
+#pip install git+https://github.com/lingchen42/biliwalle.git@{tagname} --upgrade  # install a certain release
 ```
 
 ## Usage
