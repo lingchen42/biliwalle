@@ -23,8 +23,8 @@ cd biliwalle
 git pull
 
 # install from source
-python setup.py sdist
-pip install dist/biliwalle-0.1.dev0.tar.gz
+pip install git+https://github.com/lingchen42/biliwalle.git --upgrade
+#pip install git+https://github.com/lingchen42/biliwalle.git@{tagname} --upgrade
 ```
 
 ## Usage
