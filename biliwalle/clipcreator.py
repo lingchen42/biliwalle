@@ -125,8 +125,7 @@ def make_movie_with_protocol(protocoldf, outdir,
             logger = None
         
         outvideo.write_videofile(outname, codec=codec,
-                                 audio_codec='libmp3lame',
-                                 audio_bitrate='320k',
+                                 audio_codec='aac',
                                  remove_temp=True,
                                  fps=fps,
                                  logger=logger)
