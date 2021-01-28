@@ -1,4 +1,6 @@
-Welcome to biliwalle!
+Welcome to BILI-WALLE!
+
+This tool suite was developed to streamline the process of creating video stimuli files for an eye-tracking study. It was specifically developed for a Preferential Looking Paradigm but can be generalized to create other types of video files given a specific protocol. 
 
 ---
 
@@ -6,7 +8,7 @@ Welcome to biliwalle!
 The biliwalle suite contains the following tools:
 
 1. [waveweaver](https://github.com/lingchen42/biliwalle/wiki/2.-waveweaver) <br>
-This can concatenate multiple audio files and add padding at the start/interval/end based on a given protocol.
+This tool can concatenate multiple audio files and add padding at the start/interval/end based on a given protocol.
 
 ## Install Prerequisites
 Git - https://git-scm.com/
