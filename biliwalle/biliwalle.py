@@ -23,8 +23,9 @@ def load_config(configfn):
     protocolcsv = data.get("protocolcsv", "")
     protocoldf = pd.read_csv(protocolcsv)
     saveconfig = config.get("other", {}).get("saveconfig", None)
+    reprocess = config.get("other", {}).get("reprocess", True)
     return videodir, outdir, protocoldf, saveconfig,\
-           video_setting, config
+           video_setting, config, reprocess
 
 
 def blank_clip(duration, bg_color, size):
@@ -50,6 +51,7 @@ def make_movie_with_protocol(protocoldf,
                              outdir,
                              videodir,
                              video_setting,
+                             order_col="Order",
                              video_file_col="Video_file",
                              trial_type_col="Trial_type",
                              outname_col="Output_video_file",
@@ -59,7 +61,8 @@ def make_movie_with_protocol(protocoldf,
                                  "black": (0, 0, 0),
                                  "white": (255, 255, 255)
                              },
-                             verbose=1):
+                             verbose=1,
+                             reprocess=True):
 
     w = video_setting["out_width"]
     h = video_setting["out_height"]
@@ -70,47 +73,61 @@ def make_movie_with_protocol(protocoldf,
     if not os.path.exists(outdir): os.makedirs(outdir)
 
     videos = [] 
-    outname = protocoldf[outname_col].values[0]
-    outname = os.path.join(outdir, outname)
-    for _, row in tqdm(protocoldf.iterrows()):
-        videofn = row[video_file_col]
-        trial_type = row[trial_type_col]
+    for order, grp in protocoldf.groupby(order_col):
+        outname = grp[outname_col].values[0]
+        outname = os.path.join(outdir, outname)
 
-        if trial_type.lower() == "transition":
-            # expect to see videofn color_[0-9]s
-            bg_color, duration = videofn.split("_")
-            duration = int(re.findall("([0-9]*)s", duration)[0])
-            video = blank_clip(duration, bg_color.lower(), size=(w,h))
-            videos.append(video)
-        else:
-            videofn = os.path.join(videodir, videofn)
-            if os.path.exists(videofn):
-                video = VideoFileClip(videofn)
-                videos.append(video)
-                # between trial interval
-                interval_video = blank_clip(between_trial_duration, 
-                        between_trial_bgcolor.lower(), size=(w,h))
-                videos.append(interval_video)
-            else:
-                print("SKIP %s doesn't exist"%videofn)
-                continue
-
-    outvideo = concatenate_videoclips(videos)
-    if verbose:
-        print("\nWriting to %s"%outname)
-        logger = "bar"
-    else:
-        logger = None
-    outvideo.write_videofile(outname, codec=codec,
-                            audio_codec='aac',
-                            remove_temp=True,
-                            fps=fps,
-                            logger=logger)
+        if os.path.exists(outname) and (not reprocess):
+            if verbose:
+                print("\n\n")
+                print("#"*80)
+                print("\nSKIP found existing %s\n"%outname)
+            continue
         
-    # close the opened videos
-    for v in videos:
-        v.close()
-    outvideo.close()
+        if verbose:
+            print("\n\n")
+            print("#"*80)
+            print("Generating %s file to %s\n"%(int(order), outname))
+
+        for _, row in tqdm(grp.iterrows()):
+            videofn = row[video_file_col]
+            trial_type = row[trial_type_col]
+
+            if trial_type.lower() == "transition":
+                # expect to see videofn color_[0-9]s
+                bg_color, duration = videofn.split("_")
+                duration = int(re.findall("([0-9]*)s", duration)[0])
+                video = blank_clip(duration, bg_color.lower(), size=(w,h))
+                videos.append(video)
+            else:
+                videofn = os.path.join(videodir, videofn)
+                if os.path.exists(videofn):
+                    video = VideoFileClip(videofn)
+                    videos.append(video)
+                    # between trial interval
+                    interval_video = blank_clip(between_trial_duration, 
+                            between_trial_bgcolor.lower(), size=(w,h))
+                    videos.append(interval_video)
+                else:
+                    print("SKIP %s doesn't exist"%videofn)
+                    continue
+
+        outvideo = concatenate_videoclips(videos)
+        if verbose:
+            print("\nWriting to %s"%outname)
+            logger = "bar"
+        else:
+            logger = None
+        outvideo.write_videofile(outname, codec=codec,
+                                audio_codec='aac',
+                                remove_temp=True,
+                                fps=fps,
+                                logger=logger)
+            
+        # close the opened videos
+        for v in videos:
+            v.close()
+        outvideo.close()
 
 
 def main():
@@ -121,13 +138,15 @@ def main():
            help="verbose level, 0 or 1")
     args = parser.parse_args()
     
-    videodir, outdir, protocoldf, saveconfig, video_setting, config = \
+    videodir, outdir, protocoldf, saveconfig, video_setting,\
+        config, reprocess = \
         load_config(args.config)
     make_movie_with_protocol(protocoldf,
                              outdir,
                              videodir,
                              video_setting,
-                             verbose=args.verbose)
+                             verbose=args.verbose,
+                             reprocess=reprocess)
 
     if saveconfig:
         shutil.copy(args.config, outdir)
