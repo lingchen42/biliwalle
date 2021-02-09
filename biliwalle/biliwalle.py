@@ -87,7 +87,7 @@ def make_movie_with_protocol(protocoldf,
         if verbose:
             print("\n\n")
             print("#"*80)
-            print("Generating %s file to %s\n"%(int(order), outname))
+            print("Generating %sth file to %s\n"%(int(order), outname))
 
         for _, row in tqdm(grp.iterrows()):
             videofn = row[video_file_col]
