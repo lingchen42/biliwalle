@@ -72,8 +72,8 @@ def make_movie_with_protocol(protocoldf,
 
     if not os.path.exists(outdir): os.makedirs(outdir)
 
-    videos = [] 
     for order, grp in protocoldf.groupby(order_col):
+        videos = [] 
         outname = grp[outname_col].values[0]
         outname = os.path.join(outdir, outname)
 
