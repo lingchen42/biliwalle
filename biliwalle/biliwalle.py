@@ -38,8 +38,12 @@ def blank_clip(duration, bg_color, size):
     draw = ImageDraw.Draw(img) 
     imgpath = os.path.join(dirpath, "blank.png")
     img.save(imgpath)
-    clip = ImageClip(imgpath).\
-            with_duration(duration)
+    try:
+        clip = ImageClip(imgpath).\
+                with_duration(duration)
+    except:
+        clip = ImageClip(imgpath).\
+                set_duration(duration)
 
     # remove temp dir
     shutil.rmtree(dirpath)
@@ -103,6 +107,7 @@ def make_movie_with_protocol(protocoldf,
                 videofn = os.path.join(videodir, videofn)
                 if os.path.exists(videofn):
                     video = VideoFileClip(videofn)
+                    video = video.resize(height=h, width=w)
                     videos.append(video)
                     # between trial interval
                     interval_video = blank_clip(between_trial_duration, 
@@ -112,7 +117,7 @@ def make_movie_with_protocol(protocoldf,
                     print("SKIP %s doesn't exist"%videofn)
                     continue
 
-        outvideo = concatenate_videoclips(videos)
+        outvideo = concatenate_videoclips(videos, method="compose")
         if verbose:
             print("\nWriting to %s"%outname)
             logger = "bar"
