@@ -4,8 +4,8 @@ This tool suite was developed to streamline the process of creating video stimul
 
 ---
 ## Install Prerequisites
-Git - https://git-scm.com/
-Python - https://www.python.org/downloads/
+* Git - https://git-scm.com/
+* Python - https://www.python.org/downloads/
 
 ## Installation
 ```
