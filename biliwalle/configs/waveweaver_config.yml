@@ -4,11 +4,11 @@ data:
   outdir: your_outdir
 
 audio_setting:
-  start_padding: 1
-  interval_padding: 1
-  end_padding: 1
+  start_padding: 1   # this is in ms
+  interval_padding: 1  # this is in ms
+  end_padding: 1  # this is in ms
   additional_padding_location: start
-  additional_padding_value_column: Pad_silence
+  additional_padding_value_column: Pad_silence   # will use ms for values in this column
 
 other:
   saveconfig: True  # will save input configuration file in the outdir

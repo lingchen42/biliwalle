@@ -42,7 +42,6 @@ def concatenate_audiofns(audiofns, audiodir,
                          start_padding, interval_padding,
                          end_padding, additional_padding=0,
                          additional_padding_location="start",
-                         additional_padding_value_column=None,
                          fps=44100,
                          savetofn=False,
                          ):
