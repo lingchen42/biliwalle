@@ -72,14 +72,21 @@ def concatenate_audiofns(audiofns, audiodir,
             second_padding = end_padding
 
         # audio
-        audio_files.append(a.set_start(current_start))
+        try:  # in moviepy 2.0
+            audio_files.append(a.with_start(current_start))
+        except: # moviepy 1.0
+            audio_files.append(a.set_start(current_start))
         current_start += a.duration
 
         if second_padding:
             # add interval or end
             second_clip = empty_audio_clip(duration=second_padding,
                                         fps=fps)
-            audio_files.append(second_clip.set_start(current_start))
+            try:
+                audio_files.append(second_clip.with_start(current_start))
+            except:
+                audio_files.append(second_clip.set_start(current_start))
+
             # update current_start
             current_start += second_clip.duration
         
