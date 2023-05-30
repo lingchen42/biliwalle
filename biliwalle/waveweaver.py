@@ -42,6 +42,7 @@ def concatenate_audiofns(audiofns, audiodir,
                          start_padding, interval_padding,
                          end_padding, additional_padding=0,
                          additional_padding_location="start",
+                         additional_padding_value_column=None,
                          fps=44100,
                          savetofn=False,
                          ):
@@ -54,7 +55,7 @@ def concatenate_audiofns(audiofns, audiodir,
             interval_padding += additional_padding
         
     audio_files = []
-    last = len(audio_files) - 1
+    last = len(audiofns) - 1
     current_start = 0
     for i, audiofn in enumerate(audiofns):
         audiofn = os.path.join(audiodir, audiofn)
@@ -69,6 +70,7 @@ def concatenate_audiofns(audiofns, audiodir,
             second_padding = interval_padding
         else:
             second_padding = end_padding
+            print("End padding", second_padding)
 
         # audio
         try:  # in moviepy 2.0
