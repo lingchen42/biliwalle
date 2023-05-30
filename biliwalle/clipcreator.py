@@ -38,7 +38,10 @@ def compose(videos, audio, output_size,
     v = CompositeVideoClip(videos, output_size,
                           bg_color=bg_color)
     if audio != None:
-        v = v.with_audio(audio).subclip(0, audio.duration)
+        try:
+            v = v.with_audio(audio).subclip(0, audio.duration)
+        except:
+            v = v.set_audio(audio).subclip(0, audio.duration)
     return v
 
 
@@ -53,9 +56,14 @@ def process_video(videofn, resize_to_width, resize_to_height,
     x, y = center_to_topleft(position_x, position_y, 
                              resize_to_width, resize_to_height)
     video = VideoFileClip(videofn)
-    video = video.resize(width=resize_to_width, 
+    try:
+        video = video.resize(width=resize_to_width, 
                         height=resize_to_height).\
-                  with_position((x, y))
+                     with_position((x, y))
+    except:
+        video = video.resize(width=resize_to_width, 
+                        height=resize_to_height).\
+                     set_position((x, y))
     return video
 
 
