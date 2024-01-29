@@ -4,6 +4,7 @@ This tool suite was developed to streamline the process of creating video stimul
 
 ---
 ## Install Prerequisites
+* XCODE (Mac only). This is the essential package for mac developer setup. - https://developer.apple.com/xcode/
 * Git - https://git-scm.com/
 * Python - https://www.python.org/downloads/
 
