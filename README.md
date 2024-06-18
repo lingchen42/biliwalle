@@ -16,3 +16,9 @@ pip install git+https://github.com/lingchen42/biliwalle.git --upgrade
 
 ## Usage
 See biliwalle [Wiki](https://github.com/lingchen42/biliwalle/wiki)
+
+
+## FAQ
+* "RuntimeError: No ffmpeg exe could be found"
+    * Download FFMPEG executable files of the corresponding system from https://ffmpeg.org/download.html
+    * If you are using Linux/Mac, run export IMAGEIO_FFMPEG_EXE="PATH_TO_THE_DOWNLOADED_FFMPEG_EXECUTABLE" in your terminal before run any of the biliwalle commands.

@@ -19,7 +19,7 @@ setup(
     include_package_data=True,
     install_requires=['moviepy >= 2.0.0.dev2',
                        'pandas > 0.11',
-                       'PyYAML == 5.4.1'],
+                       'PyYAML >= 5.4.1'],
     entry_points={
         'console_scripts': [
             'waveweaver=biliwalle.waveweaver:main',

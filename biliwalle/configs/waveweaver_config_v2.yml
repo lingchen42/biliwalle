@@ -1,0 +1,15 @@
+version: 2
+
+data:
+  audiodir: your_audiodir
+  protocolcsv: your_protocolcsv
+  outdir: your_outdir
+
+audio_setting:
+  start_padding: 0  # start silence in miliseconds, padded at the begining of every concatenated audio
+  end_padding: 1000  # end silence in miliseconds, padded at the ending of every concatenated audio
+  interval_padding_location: before # before the audio clip or after the clip. Specified per row (per .wav file)
+  interval_padding_column: Pad_silence # the column for padding silence between clips, in miliseconds. Specified per row (per .wav file) 
+
+other:
+  saveconfig: True  # True or False will save input configuration file in the outdir
