@@ -7,7 +7,7 @@ here = pathlib.Path(__file__).parent.resolve()
 long_description = (here / 'README.md').read_text(encoding='utf-8')
 setup(
     name='biliwalle',
-    version='0.1dev',
+    version='0.2dev',
     description='Helper functions for the biliwoli project',
     long_description=long_description,
     long_description_content_type='text/markdown', 
