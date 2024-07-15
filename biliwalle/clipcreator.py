@@ -96,6 +96,10 @@ def make_clip_with_protocol(protocoldf, outdir,
     '''
     w = video_setting["out_width"]
     h = video_setting["out_height"]
+    bg_color = video_setting.get("bg_color", [255, 255, 255])
+    bg_color = tuple(bg_color)
+    assert len(bg_color) == 3,\
+        "Please provide bg_color in RGB format in the config, such as [255, 255, 255]"
 
     if not os.path.exists(outdir): os.makedirs(outdir)
 
@@ -134,7 +138,8 @@ def make_clip_with_protocol(protocoldf, outdir,
         # compose
         outvideo = compose(videos=videos,
                            audio=audio,
-                           output_size=(w, h))
+                           output_size=(w, h),
+                           bg_color=bg_color)
 
         if verbose:
             print("\nWriting to %s"%outname)
@@ -153,7 +158,6 @@ def make_clip_with_protocol(protocoldf, outdir,
             v.close()
         outvideo.close()
         audio.close()
-
 
 
 def main():

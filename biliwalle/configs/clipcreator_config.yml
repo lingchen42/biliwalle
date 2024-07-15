@@ -7,6 +7,7 @@ data:
 video_setting:
   out_width: 1920
   out_height: 1080
+  bg_color: [255, 255, 255]  # RGB color, must be 3 digits, each digit is an integer between 0-255
   objects: 
     Left:  # the name of the column containing the object as key
       resize_to_width: 640  # original is 1920, 1080; scale factor 3
