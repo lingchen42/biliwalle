@@ -7,7 +7,7 @@ here = pathlib.Path(__file__).parent.resolve()
 long_description = (here / 'README.md').read_text(encoding='utf-8')
 setup(
     name='biliwalle',
-    version='0.2dev',
+    version='0.3dev',
     description='Helper functions for the biliwoli project',
     long_description=long_description,
     long_description_content_type='text/markdown', 
@@ -19,7 +19,8 @@ setup(
     include_package_data=True,
     install_requires=['moviepy >= 2.0.0.dev2',
                        'pandas > 0.11',
-                       'PyYAML >= 5.4.1'],
+                       'PyYAML >= 5.4.1',
+                       "Pillow==9.5.0"],
     entry_points={
         'console_scripts': [
             'waveweaver=biliwalle.waveweaver:main',

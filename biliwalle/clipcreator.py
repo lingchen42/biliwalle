@@ -3,9 +3,10 @@ import re
 import yaml
 import shutil
 import argparse
+import mimetypes
 import pandas as pd
 from glob import glob
-from moviepy.editor import clips_array, VideoFileClip, \
+from moviepy.editor import ImageClip, VideoFileClip, \
                         CompositeVideoClip, AudioFileClip
 from biliwalle.waveweaver import empty_audio_clip
 
@@ -51,11 +52,33 @@ def center_to_topleft(center_x, center_y, width, height):
     return x, y
 
 
-def process_video(videofn, resize_to_width, resize_to_height,
-                  position_x, position_y):
+def check_image_or_video(fn):
+    t = mimetypes.guess_type(fn)[0]
+    if t.startswith('video'):
+        return 'video'
+    elif t.startswith('image'):
+        return 'image'
+    else:
+        raise Exception('File %s is not video or image, please double check'%fn)
+
+
+def image_to_video(imagefn, duration):
+    '''
+    imagefn: Any picture file (png, tiff, jpeg, etc.) as a string or a path-like object
+    '''
+    clip = ImageClip(imagefn).set_duration(duration)
+    return clip
+
+
+def process_video(fn, resize_to_width, resize_to_height,
+                  position_x, position_y, duration=None):
     x, y = center_to_topleft(position_x, position_y, 
                              resize_to_width, resize_to_height)
-    video = VideoFileClip(videofn)
+    fn_type = check_image_or_video(fn)
+    if fn_type == 'video':
+        video = VideoFileClip(fn)
+    else:
+        video = image_to_video(fn, duration=duration)
     try:
         video = video.resize(width=resize_to_width, 
                         height=resize_to_height).\
@@ -69,7 +92,7 @@ def process_video(videofn, resize_to_width, resize_to_height,
 
 def process_audio(audiofn, audiodir, fps=44100):
     if "silence" not in audiofn.lower():
-        n_audiofn = glob(audiodir+"*/%s"%audiofn)
+        n_audiofn = glob(audiodir+audiofn)
         if not len(n_audiofn):
             raise Exception("\n\nSKIP WARNING: %s in not found in sub directory of %s"\
                     %(audiofn, audiodir))
@@ -105,6 +128,10 @@ def make_clip_with_protocol(protocoldf, outdir,
 
     for _, row in protocoldf.iterrows():
         outname = os.path.join(outdir, row["Output_file"])
+        
+        # process audio file
+        audio = process_audio(row["Audio_file"], audiodir)
+        duration = audio.duration
 
         if os.path.exists(outname) and (not reprocess):
             if verbose:
@@ -113,18 +140,33 @@ def make_clip_with_protocol(protocoldf, outdir,
             
         if test_identifier in protocoldf.columns:
             # for testing movie making with left/right objects
-            left_video_fn = glob(videodir+"/%s_*"%row["Left"])[0]
-            right_video_fn = glob(videodir+"/%s_*"%row["Right"])[0]
-            left_video = process_video(left_video_fn, 
+            p = videodir+"/%s*"%row["Left"]
+            left_video_fns = glob(p)
+            assert len(left_video_fns) == 1, \
+                f"File pattern {p} is found {len(left_video_fns)} times, please make sure it's unique" 
+            left_video_fn = left_video_fns[0]
+
+            p = videodir+"/%s*"%row["Right"]
+            right_video_fns = glob(p)
+            assert len(right_video_fns) == 1, \
+                f"File pattern {p} is found {len(right_video_fns)} times, please make sure it's unique" 
+            right_video_fn = right_video_fns[0]
+
+            left_video = process_video(left_video_fn, duration=duration,
                                 **video_setting["objects"]["Left"])
-            right_video = process_video(right_video_fn, 
+            right_video = process_video(right_video_fn, duration=duration,
                                 **video_setting["objects"]["Right"])
             videos = [left_video, right_video]
         
         elif train_identifier in protocoldf.columns:
-            # for training movie making with left/right objects
-            video_fn = glob(videodir+"/%s_*"%row["Object"])[0]
-            video = process_video(video_fn,
+            # for training movie making with center object
+            p = videodir+"/%s_*"%row["Object"]
+            video_fns = glob(p)
+            assert len(video_fns) == 1, \
+                f"File pattern {p} is found {len(video_fns)} times, please make sure it's unique"
+            video_fn = video_fns[0]
+
+            video = process_video(video_fn, duration=duration,
                             **video_setting["objects"]["Object"])
             videos = [video]
         
@@ -133,8 +175,6 @@ def make_clip_with_protocol(protocoldf, outdir,
                              Make sure you have the right protocol csv fomat"\
                              %(test_identifier, train_identifier))
 
-        # process audio file
-        audio = process_audio(row["Audio_file"], audiodir)
         # compose
         outvideo = compose(videos=videos,
                            audio=audio,
