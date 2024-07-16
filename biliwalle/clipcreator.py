@@ -160,7 +160,7 @@ def make_clip_with_protocol(protocoldf, outdir,
         
         elif train_identifier in protocoldf.columns:
             # for training movie making with center object
-            p = videodir+"/%s_*"%row["Object"]
+            p = videodir+"/%s*"%row["Object"]
             video_fns = glob(p)
             assert len(video_fns) == 1, \
                 f"File pattern {p} is found {len(video_fns)} times, please make sure it's unique"
